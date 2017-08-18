@@ -25,10 +25,6 @@ from __future__ import print_function, division, absolute_import, unicode_litera
 
 import sys
 
-import RPi.GPIO as GPIO
-
-from RPLCD import i2c, gpio
-
 # Import supported tests
 import lcdtests.show_charmap as show_charmap
 import lcdtests.testsuite_20x4 as testsuite_20x4
@@ -37,7 +33,6 @@ import lcdtests.testsuite_16x2 as testsuite_16x2
 # Globals
 options = {}
 no_default = object()
-
 
 def print_usage(error=None):
     print('Usage: %s i2c <test> <options>' % sys.argv[0])
@@ -154,6 +149,8 @@ if __name__ == '__main__':
         if len(sys.argv) < 5:
             print_usage()
 
+        from RPLCD import i2c
+
         # i2c options, pop all required options, pass remaining options to expander_params
         i2c_expander = options_pop('expander')
         address = int(options_pop('addr'), 16)
@@ -169,6 +166,8 @@ if __name__ == '__main__':
             print_usage()
 
         # gpio options
+        import RPi.GPIO as GPIO
+
         mode = options_pop('mode')
         if mode == 'BCM':
             numbering_mode = GPIO.BCM
@@ -176,6 +175,8 @@ if __name__ == '__main__':
             numbering_mode = GPIO.BOARD
         else:
             print_usage('Invalid GPIO numbering mode: %s, must be either BOARD or BCM' % mode)
+
+        from RPLCD import gpio
 
         data = options_pop('data')
         rs = int(options_pop('rs'))
